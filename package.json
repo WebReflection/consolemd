@@ -1,0 +1,32 @@
+{
+  "name": "consolemd",
+  "version": "0.0.1",
+  "description": "echomd conversion tool for browsers and console",
+  "main": "index.js",
+  "dependencies": {
+    "echomd": "^0.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node -e 'require(\"./index\");console.log(\"#green(*✓*) *OK*\");' || exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebReflection/consolemd.git"
+  },
+  "keywords": [
+    "markdown",
+    "md",
+    "echo",
+    "console",
+    "log",
+    "shell",
+    "browser"
+  ],
+  "author": "Andrea Giammarchi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WebReflection/consolemd/issues"
+  },
+  "homepage": "https://github.com/WebReflection/consolemd#readme"
+}
