@@ -1,0 +1,6 @@
+{
+  "name": "Consolemd",
+  "tagline": "Bringing echomd to console.",
+  "body": "# consolemd [![build status](https://travis-ci.org/WebReflection/consolemd.svg)](https://travis-ci.org/WebReflection/consolemd)\r\nThe [echomd](https://github.com/WebReflection/echomd) conversion tool for browsers and console.\r\n\r\n```js\r\nrequire('consolemd');\r\n\r\nconsole.log('what a *bold* solution!');\r\n\r\nconsole.log(`\r\n# Bringing MD Like Syntax To Console\r\nIt should be something as **easy**\r\nand as _natural_ as writing text.\r\n\r\n> Kepp It Simple\r\n\r\nIs the idea\r\n\r\n  * behind\r\n  * all this\r\n\r\n~striking~ UX for \\`shell\\` users too.\r\n- - -\r\n#green(Enjoy)\r\n`);\r\n```\r\n\r\nPlease note if you want to use original version of a method you can `console.log.raw('do *it*')`.\r\n\r\n**MIT Style License**\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
