@@ -278,8 +278,9 @@
     // otherwise replace global console methods
     for (i = 0; i < methods.length; i++) {
       key = methods[i];
-      overwrite = console[key];
-      if (!overwrite.raw) consolemd[key];
+      if (!console[key].raw) {
+        console[key] = consolemd[key];
+      }
     }
   }
 }());
