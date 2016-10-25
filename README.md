@@ -2,7 +2,9 @@
 The [echomd](https://github.com/WebReflection/echomd) conversion tool for browsers and console.
 
 ```js
-require('consolemd');
+// overwritten in browsers if loaded without browserify
+// otherwise, in CommonJS env (avoids overwrite)
+var console = require('consolemd');
 
 console.log('what a *bold* solution!');
 
