@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node -e 'require(\"./index\");console.log(\"#green(*✓*) *OK*\");' || exit 1"
+    "test": "node -e 'require(\"./index\").log(\"#green(*✓*) *OK*\");' || exit 1"
   },
   "repository": {
     "type": "git",
