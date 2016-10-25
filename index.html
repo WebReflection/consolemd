@@ -11,7 +11,6 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script src="index.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -35,7 +34,9 @@
 
 <p>The <a href="https://github.com/WebReflection/echomd">echomd</a> conversion tool for browsers and console.</p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>consolemd<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// overwritten in browsers if loaded without browserify</span>
+<span class="pl-c">// otherwise, in CommonJS env (avoids overwrite)</span>
+<span class="pl-k">var</span> <span class="pl-en">console</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>consolemd<span class="pl-pds">'</span></span>);
 
 <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>what a *bold* solution!<span class="pl-pds">'</span></span>);
 
