@@ -241,19 +241,45 @@
     // simply accessing console.methodName.raw( ... ) instead
     overwrite = function (method) {
       var original = console[method];
-      if (!original.raw) (console[method] = function () {
-        return isNodeJS ?
-          original.apply(console, parse.apply(null, arguments)) :
-          (arguments.length === 1 && typeof arguments[0] === 'string' ?
+      if (original) (consolemd[method] = isNodeJS ?
+        function () {
+          return original.apply(console, parse.apply(null, arguments));
+        } :
+        function () {
+          return arguments.length === 1 && typeof arguments[0] === 'string' ?
             original.apply(console, parse(arguments[0])) :
-            original.apply(console, arguments));
-      }).raw = function () {
-        return original.apply(console, arguments);
-      };
+            original.apply(console, arguments);
+        }).raw = function () {
+          return original.apply(console, arguments);
+        };
     },
+    consolemd = {},
     methods = ['error', 'info', 'log', 'warn'],
+    key,
     i = 0; i < methods.length; i++
   ) {
     overwrite(methods[i]);
+  }
+  // if this is a CommonJS module
+  try {
+    // export consolemd fake object
+    module.exports = consolemd;
+    overwrite = function (original) {
+      return function () {
+        return original.apply(console, arguments);
+      };
+    };
+    for (key in console) {
+      if (!consolemd.hasOwnProperty(key)) {
+        consolemd[key] = overwrite(console[key]);
+      }
+    }
+  } catch(e) {
+    // otherwise replace global console methods
+    for (i = 0; i < methods.length; i++) {
+      key = methods[i];
+      overwrite = console[key];
+      if (!overwrite.raw) consolemd[key];
+    }
   }
 }());
