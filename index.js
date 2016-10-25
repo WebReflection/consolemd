@@ -279,7 +279,9 @@
     for (i = 0; i < methods.length; i++) {
       key = methods[i];
       overwrite = console[key];
-      if (!overwrite.raw) consolemd[key];
+      if (!overwrite.raw) {
+        console[key] = consolemd[key];
+      }
     }
   }
 }());
