@@ -1,6 +1,6 @@
 {
   "name": "consolemd",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "echomd conversion tool for browsers and console",
   "main": "index.js",
   "dependencies": {
