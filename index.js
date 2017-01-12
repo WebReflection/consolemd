@@ -31,7 +31,7 @@
   # ────────────────────────────────────────────────────────────────────────
   */
   for (var
-    isNodeJS = typeof process === 'object',
+    isNodeJS = typeof process === 'object' && !process.browser,
     parse = isNodeJS ?
       // on NodeJS simply fallback to echomd
       (function (echomd, map) {
