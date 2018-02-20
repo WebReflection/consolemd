@@ -7,11 +7,12 @@ The [echomd](https://github.com/WebReflection/echomd) conversion tool for browse
 var console = require('consolemd');
 
 console.log('what a *bold* solution!');
+console.log('I love =italic= type!');
 
 console.log(`
 # Bringing MD Like Syntax To Console
 It should be something as **easy**
-and as _natural_ as writing text.
+and as _natural_ as =writing= text.
 
 > Kepp It Simple
 
@@ -23,6 +24,7 @@ Is the idea
 ~striking~ UX for \`shell\` users too.
 - - -
 #green(Enjoy)
+
 `);
 ```
 
