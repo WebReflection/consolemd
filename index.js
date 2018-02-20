@@ -1,35 +1,36 @@
-(function () {'use strict';
- /*!
-  # consolemd -- echomd conversion tool for browsers and console
-  #
-  # echomd <https://github.com/WebReflection/echomd>
-  #
-  # Fully inspired by the work of John Gruber
-  # <http://daringfireball.net/projects/markdown/>
-  #
-  # ────────────────────────────────────────────────────────────────────────
-  # The MIT License (MIT)
-  # Copyright (c) 2016 Andrea Giammarchi - @WebReflection
-  #
-  # Permission is hereby granted, free of charge, to any person obtaining a
-  # copy of this software and associated documentation files (the "Software"),
-  # to deal in the Software without restriction, including without limitation
-  # the rights to use, copy, modify, merge, publish, distribute, sublicense,
-  # and/or sell copies of the Software, and to permit persons to whom
-  # the Software is furnished to do so, subject to the following conditions:
-  #
-  # The above copyright notice and this permission notice shall be included
-  # in all copies or substantial portions of the Software.
-  #
-  # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-  # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-  # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-  # THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  # ────────────────────────────────────────────────────────────────────────
-  */
+(function () {
+  'use strict';
+  /*!
+   # consolemd -- echomd conversion tool for browsers and console
+   #
+   # echomd <https://github.com/WebReflection/echomd>
+   #
+   # Fully inspired by the work of John Gruber
+   # <http://daringfireball.net/projects/markdown/>
+   #
+   # ────────────────────────────────────────────────────────────────────────
+   # The MIT License (MIT)
+   # Copyright (c) 2016 Andrea Giammarchi - @WebReflection
+   #
+   # Permission is hereby granted, free of charge, to any person obtaining a
+   # copy of this software and associated documentation files (the "Software"),
+   # to deal in the Software without restriction, including without limitation
+   # the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   # and/or sell copies of the Software, and to permit persons to whom
+   # the Software is furnished to do so, subject to the following conditions:
+   #
+   # The above copyright notice and this permission notice shall be included
+   # in all copies or substantial portions of the Software.
+   #
+   # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+   # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+   # THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   # ────────────────────────────────────────────────────────────────────────
+   */
   for (var
     isNodeJS = typeof process === 'object' && !process.browser,
     parse = isNodeJS ?
@@ -64,7 +65,7 @@
             },
             out = [],
             args, i, j, length, css, key, re
-          ;
+            ;
 
           // match and hide possible code (which should not be parsed)
           match(txt, 'multiLineCode', out);
@@ -78,6 +79,7 @@
           match(txt, 'header1', out);
           match(txt, 'bold', out);
           match(txt, 'underline', out);
+          match(txt, 'italic', out);
           match(txt, 'strike', out);
           match(txt, 'color', out);
 
@@ -92,9 +94,10 @@
           // # Header
           txt = replace(txt, 'header1');
 
-          // *bold* _underline_ ~strike~
+          // *bold* =italic= _underline_ ~strike~
           txt = replace(txt, 'bold');
           txt = replace(txt, 'underline');
+          txt = replace(txt, 'italic');
           txt = replace(txt, 'strike');
 
           //    * list bullets
@@ -199,6 +202,12 @@
         start: 'font-weight:bold;font-size:1.3em;',
         end: 'font-weight:default;font-size:default;'
       },
+      italic: {
+        re: /(={1})(?=\S)(.*?)(\S)\1/g,
+        place: commonReplacer,
+        start: 'font-style: italic;',
+        end: 'font-style: unset;'
+      },
       underline: {
         re: /(_{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
@@ -228,8 +237,8 @@
         },
         start: function (match) {
           return (match[1] ? 'background-' : '') + 'color:' +
-                 (/^[a-fA-F0-9]{3,8}$/.test(match[2]) ? '#' : '') +
-                 match[2] + ';';
+            (/^[a-fA-F0-9]{3,8}$/.test(match[2]) ? '#' : '') +
+            match[2] + ';';
         },
         end: function (match) {
           return (match[1] ? 'background-' : '') + 'color:initial;';
@@ -274,7 +283,7 @@
         consolemd[key] = overwrite(console[key]);
       }
     }
-  } catch(e) {
+  } catch (e) {
     // otherwise replace global console methods
     for (i = 0; i < methods.length; i++) {
       key = methods[i];
