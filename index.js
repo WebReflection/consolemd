@@ -166,8 +166,8 @@
       blink: {
         re: /(\:{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
-        start: 'border:1px solid darkslategray;text-shadow:0 0 2px darkslategray;',
-        end: 'border:none;text-shadow:none;'
+        start: 'padding:0 2px;border:1px solid darkslategray;text-shadow:0 0 2px darkslategray;',
+        end: 'padding:none;border:none;text-shadow:none;'
       },
       bold: {
         re: /(\*{1,2})(?=\S)(.*?)(\S)\1/g,
@@ -216,8 +216,8 @@
       reverse: {
         re: /(\!{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
-        start: 'background:darkslategray;color:lightgray;',
-        end: 'background:none;color:none;'
+        start: 'padding:0 2px;background:darkslategray;color:lightgray;',
+        end: 'padding:none;background:none;color:none;'
       },
       multiLineCode: {
         re: /(^|[^\\])(`{2,})([\s\S]+?)\2(?!`)/g,
