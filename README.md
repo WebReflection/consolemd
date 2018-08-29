@@ -1,4 +1,4 @@
-# consolemd [![build status](https://travis-ci.org/WebReflection/consolemd.svg)](https://travis-ci.org/WebReflection/consolemd)
+# consolemd [![build status](https://travis-ci.com/WebReflection/consolemd.svg)](https://travis-ci.com/WebReflection/consolemd)
 The [echomd](https://github.com/WebReflection/echomd) conversion tool for browsers and console.
 
 ```js
