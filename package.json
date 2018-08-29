@@ -3,12 +3,17 @@
   "version": "0.1.3",
   "description": "echomd conversion tool for browsers and console",
   "main": "index.js",
+  "browser": "min.js",
   "dependencies": {
-    "echomd": "^0.1.2"
+    "echomd": "^0.2.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "uglify-js": "^3.4.8"
+  },
   "scripts": {
-    "test": "node -e 'require(\"./index\").log(\"#green(*✓*) *OK*\");' || exit 1"
+    "build": "npm run test && npm run min",
+    "min": "uglifyjs index.js --support-ie8 --comments=/^!/ -c -m -o min.js",
+    "test": "node -e 'require(\"./index\").log(\":#green(*✓*): *OK*\");' || exit 1"
   },
   "repository": {
     "type": "git",
@@ -24,7 +29,7 @@
     "browser"
   ],
   "author": "Andrea Giammarchi",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/WebReflection/consolemd/issues"
   },

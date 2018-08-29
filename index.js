@@ -1,35 +1,9 @@
+/*! (c) 2013-2018 Andrea Giammarchi (ISC) */
+/**
+ * Fully inspired by the work of John Gruber
+ * <http://daringfireball.net/projects/markdown/>
+ */
 (function () {'use strict';
- /*!
-  # consolemd -- echomd conversion tool for browsers and console
-  #
-  # echomd <https://github.com/WebReflection/echomd>
-  #
-  # Fully inspired by the work of John Gruber
-  # <http://daringfireball.net/projects/markdown/>
-  #
-  # ────────────────────────────────────────────────────────────────────────
-  # The MIT License (MIT)
-  # Copyright (c) 2016 Andrea Giammarchi - @WebReflection
-  #
-  # Permission is hereby granted, free of charge, to any person obtaining a
-  # copy of this software and associated documentation files (the "Software"),
-  # to deal in the Software without restriction, including without limitation
-  # the rights to use, copy, modify, merge, publish, distribute, sublicense,
-  # and/or sell copies of the Software, and to permit persons to whom
-  # the Software is furnished to do so, subject to the following conditions:
-  #
-  # The above copyright notice and this permission notice shall be included
-  # in all copies or substantial portions of the Software.
-  #
-  # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-  # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-  # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-  # THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  # ────────────────────────────────────────────────────────────────────────
-  */
   for (var
     isNodeJS = typeof process === 'object' && !process.browser,
     parse = isNodeJS ?
@@ -76,9 +50,13 @@
           // in which are these found
           match(txt, 'header2', out);
           match(txt, 'header1', out);
+          match(txt, 'blink', out);
           match(txt, 'bold', out);
-          match(txt, 'underline', out);
+          match(txt, 'dim', out);
+          match(txt, 'hidden', out);
+          match(txt, 'reverse', out);
           match(txt, 'strike', out);
+          match(txt, 'underline', out);
           match(txt, 'color', out);
 
           // transform using all info
@@ -92,13 +70,17 @@
           // # Header
           txt = replace(txt, 'header1');
 
-          // *bold* _underline_ ~strike~
+          // :blink: *bold* -dim- ?hidden? !reverse! _underline_ ~strike~
+          txt = replace(txt, 'blink');
           txt = replace(txt, 'bold');
-          txt = replace(txt, 'underline');
+          txt = replace(txt, 'dim');
+          txt = replace(txt, 'hidden');
+          txt = replace(txt, 'reverse');
           txt = replace(txt, 'strike');
+          txt = replace(txt, 'underline');
 
           //    * list bullets
-          txt = txt.replace(/^([ \t]{2,})[*+-]([ \t]{1,})/gm, '$1•$2');
+          txt = txt.replace(/^([ \t]{1,})[*+-]([ \t]{1,})/gm, '$1•$2');
 
           // > simple quotes
           txt = txt.replace(/^[ \t]*>([ \t]?)/gm, function ($0, $1) {
@@ -181,11 +163,37 @@
       return txt.replace(info.re, info.place);
     },
     transform = {
+      blink: {
+        re: /(\:{1,2})(?=\S)(.*?)(\S)\1/g,
+        place: commonReplacer,
+        start: 'border:1px solid darkslategray;text-shadow:0 0 2px darkslategray;',
+        end: 'border:none;text-shadow:none;'
+      },
       bold: {
         re: /(\*{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
         start: 'font-weight:bold;',
         end: 'font-weight:default;'
+      },
+      color: {
+        re: /(!?)#([a-zA-Z0-9]{3,8})\((.+?)\)(?!\))/g,
+        place: function ($0, bg, rgb, txt) {
+          return '%c' + txt + '%c';
+        },
+        start: function (match) {
+          return (match[1] ? 'background-' : '') + 'color:' +
+                (/^[a-fA-F0-9]{3,8}$/.test(match[2]) ? '#' : '') +
+                match[2] + ';';
+        },
+        end: function (match) {
+          return (match[1] ? 'background-' : '') + 'color:initial;';
+        }
+      },
+      dim: {
+        re: /(-{1,2})(?=\S)(.*?)(\S)\1/g,
+        place: commonReplacer,
+        start: 'color:dimgray;',
+        end: 'color:none;'
       },
       header1: {
         re: /^(\#[ \t]+)(.+?)[ \t]*\#*([\r\n]+|$)/gm,
@@ -199,17 +207,17 @@
         start: 'font-weight:bold;font-size:1.3em;',
         end: 'font-weight:default;font-size:default;'
       },
-      underline: {
-        re: /(_{1,2})(?=\S)(.*?)(\S)\1/g,
+      hidden: {
+        re: /(\?{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
-        start: 'border-bottom:1px solid;',
-        end: 'border-bottom:default;'
+        start: 'color:rgba(0,0,0,0);',
+        end: 'color:none;'
       },
-      strike: {
-        re: /(~{1,2})(?=\S)(.*?)(\S)\1/g,
+      reverse: {
+        re: /(\!{1,2})(?=\S)(.*?)(\S)\1/g,
         place: commonReplacer,
-        start: 'text-decoration:line-through;',
-        end: 'text-decoration:default;'
+        start: 'background:darkslategray;color:lightgray;',
+        end: 'background:none;color:none;'
       },
       multiLineCode: {
         re: /(^|[^\\])(`{2,})([\s\S]+?)\2(?!`)/g,
@@ -221,19 +229,17 @@
         start: 'font-family:monospace;',
         end: 'font-family:default;'
       },
-      color: {
-        re: /(!?)#([a-zA-Z0-9]{3,8})\((.+?)\)(?!\))/g,
-        place: function ($0, bg, rgb, txt) {
-          return '%c' + txt + '%c';
-        },
-        start: function (match) {
-          return (match[1] ? 'background-' : '') + 'color:' +
-                 (/^[a-fA-F0-9]{3,8}$/.test(match[2]) ? '#' : '') +
-                 match[2] + ';';
-        },
-        end: function (match) {
-          return (match[1] ? 'background-' : '') + 'color:initial;';
-        }
+      strike: {
+        re: /(~{1,2})(?=\S)(.*?)(\S)\1/g,
+        place: commonReplacer,
+        start: 'text-decoration:line-through;',
+        end: 'text-decoration:default;'
+      },
+      underline: {
+        re: /(_{1,2})(?=\S)(.*?)(\S)\1/g,
+        place: commonReplacer,
+        start: 'border-bottom:1px solid;',
+        end: 'border-bottom:default;'
       }
     },
     // 'error', 'info', 'log', 'warn' are overwritten
