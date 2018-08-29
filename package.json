@@ -1,6 +1,6 @@
 {
   "name": "consolemd",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "echomd conversion tool for browsers and console",
   "main": "index.js",
   "browser": "min.js",
