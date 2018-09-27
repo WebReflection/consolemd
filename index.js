@@ -1,4 +1,4 @@
-var consolemd = (function () {
+var consolemd = (function (exports) {
   'use strict';
 
   /*! (c) 2013-2018 Andrea Giammarchi (ISC) */
@@ -254,9 +254,41 @@ var consolemd = (function () {
           return original.apply(console, parse.apply(null, arguments));
         } :
         function () {
-          return arguments.length === 1 && typeof arguments[0] === 'string' ?
-            original.apply(console, parse(arguments[0])) :
-            original.apply(console, arguments);
+          var singleStringArg = arguments.length === 1 && typeof arguments[0] === 'string';
+          var args = singleStringArg ? parse(arguments[0]) : arguments;
+
+          // Todo: We might expose more to the reporter (e.g., returning
+          //   `what` and `match` from the `parse`->`match` function) so
+          //   the user could, e.g., build spans with classes rather than
+          //   inline styles
+          if (_reporter) {
+            var
+              lastIndex, resultInfo,
+              msg = args[0],
+              formattingArgs = args.slice(1),
+              formatRegex = /%c(.*?)(?=%c|$)/g,
+              tmpIndex = 0;
+            _reporter.init();
+            while ((resultInfo = formatRegex.exec(msg)) !== null) {
+              var lastIndex = formatRegex.lastIndex;
+              var result = resultInfo[0];
+              if (result.length > 2) { // Ignore any empty %c's
+                var beginningResultIdx = lastIndex - result.length;
+                if (beginningResultIdx > tmpIndex) {
+                  var text = msg.slice(tmpIndex, beginningResultIdx);
+                  _reporter.report(text);
+                }
+                _reporter.report(result.slice(2), formattingArgs.splice(0, 1)[0]);
+              }
+              tmpIndex = lastIndex;
+            }
+            if (tmpIndex < msg.length) {
+              var text = msg.slice(tmpIndex);
+              _reporter.report(text);
+            }
+            _reporter.done(args);
+          }
+          return original.apply(console, args);
         }).raw = function () {
           return original.apply(console, arguments);
         };
@@ -290,6 +322,14 @@ var consolemd = (function () {
     }
   }
 
-  return consolemd;
+  var _reporter = null;
+  var addReporter = function (reporter) {
+    _reporter = reporter;
+  };
 
-}());
+  exports.addReporter = addReporter;
+  exports.default = consolemd;
+
+  return exports;
+
+}({}));

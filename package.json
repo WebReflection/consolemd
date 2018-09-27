@@ -10,12 +10,15 @@
     "echomd": "^0.2.3"
   },
   "devDependencies": {
+    "node-static": "^0.7.11",
+    "opn-cli": "^3.1.0",
     "rollup": "0.66.2",
     "rollup-plugin-terser": "^3.0.0"
   },
   "scripts": {
+    "browser-test": "opn http://localhost:8009/test/ && static -p 8009",
     "build": "rollup -c",
-    "test": "node -e 'require(\"./cjs/index\").log(\":#green(*✓*): *OK*\");' || exit 1"
+    "test": "node -e 'require(\"./test/test-cjs.js\")()' || exit 1"
   },
   "repository": {
     "type": "git",
@@ -31,7 +34,9 @@
     "browser"
   ],
   "author": "Andrea Giammarchi",
-  "contributors": ["Brett Zamir"],
+  "contributors": [
+    "Brett Zamir"
+  ],
   "license": "ISC",
   "engines": {
     "node": "*"

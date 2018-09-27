@@ -9,12 +9,14 @@ function getConfig ({format = 'cjs', min = false}) {
     ],
     output: {
       format,
+      exports: 'named',
       file: {
         cjs: `cjs/index${min ? '.min' : ''}.js`,
         es: `esm/index${min ? '.min' : ''}.js`,
         iife: min ? 'min.js' : 'index.js'
       }[format],
-      name: 'consolemd'
+      name: 'consolemd',
+      outro: format === 'cjs' ? 'module.exports = exports.default;' : ''
     }
   };
 }
@@ -24,5 +26,12 @@ export default [
   getConfig({format: 'iife', min: false}),
   getConfig({format: 'iife', min: true}),
   getConfig({format: 'es', min: true}),
-  getConfig({format: 'es', min: false})
+  getConfig({format: 'es', min: false}),
+  {
+    input: 'test/test.js',
+    output: {
+      format: 'cjs',
+      file: 'test/test-cjs.js'
+    }
+  }
 ];

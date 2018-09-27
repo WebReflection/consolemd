@@ -1,3 +1,5 @@
+'use strict';
+
 /*! (c) 2013-2018 Andrea Giammarchi (ISC) */
 /**
  * Fully inspired by the work of John Gruber
@@ -324,5 +326,16 @@ var addReporter = function (reporter) {
   _reporter = reporter;
 };
 
-export default consolemd;
-export { addReporter };
+function test (reporter) {
+  if (reporter) {
+    addReporter(reporter);
+  }
+  consolemd.log(':#green(*✓*): *OK*');
+  consolemd.log(':#red(*x*): *FAIL*');
+  consolemd.log('no formatting front only#yellow(*✓*)');
+  consolemd.log('no formatting front#yellow(*✓*)no formatting back');
+  consolemd.log('#yellow(*✓*)no formatting back only');
+  consolemd.log('no formatting at all');
+}
+
+module.exports = test;
