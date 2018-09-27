@@ -2,18 +2,20 @@
   "name": "consolemd",
   "version": "0.2.1",
   "description": "echomd conversion tool for browsers and console",
-  "main": "index.js",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
   "browser": "min.js",
+  "unkpg": "min.js",
   "dependencies": {
     "echomd": "^0.2.3"
   },
   "devDependencies": {
-    "uglify-js": "^3.4.8"
+    "rollup": "0.66.2",
+    "rollup-plugin-terser": "^3.0.0"
   },
   "scripts": {
-    "build": "npm run test && npm run min",
-    "min": "uglifyjs index.js --support-ie8 --comments=/^!/ -c -m -o min.js",
-    "test": "node -e 'require(\"./index\").log(\":#green(*✓*): *OK*\");' || exit 1"
+    "build": "rollup -c",
+    "test": "node -e 'require(\"./cjs/index\").log(\":#green(*✓*): *OK*\");' || exit 1"
   },
   "repository": {
     "type": "git",
@@ -29,7 +31,11 @@
     "browser"
   ],
   "author": "Andrea Giammarchi",
+  "contributors": ["Brett Zamir"],
   "license": "ISC",
+  "engines": {
+    "node": "*"
+  },
   "bugs": {
     "url": "https://github.com/WebReflection/consolemd/issues"
   },
