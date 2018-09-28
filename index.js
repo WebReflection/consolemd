@@ -1,9 +1,11 @@
-/*! (c) 2013-2018 Andrea Giammarchi (ISC) */
-/**
- * Fully inspired by the work of John Gruber
- * <http://daringfireball.net/projects/markdown/>
- */
-(function () {'use strict';
+var consolemd = (function () {
+  'use strict';
+
+  /*! (c) 2013-2018 Andrea Giammarchi (ISC) */
+  /**
+   * Fully inspired by the work of John Gruber
+   * <http://daringfireball.net/projects/markdown/>
+   */
   for (var
     isNodeJS = typeof process === 'object' && !process.browser,
     parse = isNodeJS ?
@@ -37,7 +39,7 @@
               return $1 + '%c' + getSource($3, code) + '%c';
             },
             out = [],
-            args, i, j, length, css, key, re
+            args, i, j, length, css, key
           ;
 
           // match and hide possible code (which should not be parsed)
@@ -268,8 +270,6 @@
   }
   // if this is a CommonJS module
   try {
-    // export consolemd fake object
-    module.exports = consolemd;
     overwrite = function (original) {
       return function () {
         return original.apply(console, arguments);
@@ -289,4 +289,7 @@
       }
     }
   }
+
+  return consolemd;
+
 }());
